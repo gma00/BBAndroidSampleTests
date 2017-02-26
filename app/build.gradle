@@ -17,6 +17,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.all {
+            testLogging {
+                events "failed"
+                outputs.upToDateWhen {false}
+                // print the starting message before the suite begins
+                beforeSuite {
+                    descriptor -> logger.lifecycle("BuddyBuild Starting Test Suite: " + descriptor.name + "}")
+                }
+                // print the finished message after the suite is completed
+                afterSuite {
+                    descriptor -> logger.lifecycle("BuddyBuild Finished Test Suite: " + descriptor.name + "}")
+                }
+                // modify the gradle console output by listening to the standard out of the tests
+                onOutput { descriptor, event -> logger.lifecycle(event.message) }
+            }
+        }
+    }
 }
 
 dependencies {
